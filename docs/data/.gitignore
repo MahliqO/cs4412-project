@@ -1,1 +1,24 @@
+# Ignore large dataset files
+*.csv
+*.txt
+*.json
+*.tsv
+
+# Ignore compressed data
+*.zip
+*.tar.gz
+*.rar
+
+# Keep README
+!README.md
+
+# Ignore processed data
+processed/
+interim/
+raw/
+
+# Ignore cache files
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
 
