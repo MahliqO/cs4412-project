@@ -1,101 +1,186 @@
-# CS 4412 Data Mining Project
-## Discovering User Behavior Patterns and Discussion Topics in Reddit ChatGPT Communities
+# Discovering Voices in the AI Discourse
+### CS 4412 — Data Mining | Kennesaw State University | Spring 2026
 
-### Project Overview
-This project investigates user behavior patterns and thematic structures within Reddit discussions about ChatGPT using unsupervised learning techniques. We apply clustering algorithms and text mining methods to discover natural user segments, identify emergent discussion topics, and characterize community-specific engagement patterns.
+> **A data mining analysis of 49,428 Reddit comments discussing ChatGPT**, applying K-Means clustering and LDA topic modeling to discover user archetypes and thematic patterns in public AI discourse.
 
-### Dataset
-**Name:** Reddit ChatGPT Comments Dataset  
-**Source:** [GitHub Repository](https://github.com/Armita84/ChatGPT-Dataset-Reddit)  
-**Size:** ~50,000 comments from 4 subreddits  
-**Format:** CSV file with comment_id, comment_parent_id, comment_body, and subreddit fields
+---
 
-**Dataset Description:**  
-This dataset contains user-generated comments discussing ChatGPT across multiple Reddit communities, captured during the initial public release and adoption period of ChatGPT. The data represents authentic, unfiltered user discourse from diverse communities with varying technical backgrounds, interests, and perspectives on AI technology.
+## Project Overview
 
-### Research Questions (Discovery-Focused)
-1. **User Segment Discovery:** What are the natural user segments based on commenting behavior and content characteristics in ChatGPT discussions?
+This project investigates how different types of users engage with the topic of ChatGPT across Reddit communities. Rather than predicting outcomes, the goal is **pattern discovery**: who is talking about AI, what are they saying, and how does that differ across communities?
 
-2. **Topic and Theme Emergence:** What topics and thematic discussions emerge from the ChatGPT comment corpus, and how do these topics distribute across different communities?
+**Dataset:** 49,428 Reddit comments from r/ChatGPT, r/technology, r/Futurology, r/MachineLearning, and r/artificial, collected via the Reddit API (PRAW).
 
-3. **Community-Specific Patterns:** What distinct patterns characterize user engagement and discussion styles across different subreddit communities?
+---
 
-### Planned Techniques
-#### Clustering Methods
-- **K-Means Clustering:** Partition users/comments into distinct segments
-- **Hierarchical Clustering:** Build dendrograms revealing hierarchical relationships
-- **DBSCAN:** Identify dense regions and detect outliers/anomalies
+## Discovery Questions
 
-#### Text Mining Methods
-- **TF-IDF Vectorization:** Transform text into numerical feature vectors
-- **Latent Dirichlet Allocation (LDA):** Probabilistic topic modeling to discover latent themes
+| # | Question |
+|---|----------|
+| RQ1 | What natural user segments exist based on commenting behavior and content? |
+| RQ2 | What topics and themes emerge from the ChatGPT comment corpus? |
+| RQ3 | What distinct patterns characterize engagement across different subreddit communities? |
 
-#### Supporting Techniques
-- **Principal Component Analysis (PCA):** Dimensionality reduction for visualization
+---
 
-### Project Timeline
-- **M2 (Weeks 3-6):** Data preprocessing and exploratory analysis
-- **M3 (Weeks 7-10):** Clustering implementation and topic modeling
-- **M4 (Weeks 11-15):** Analysis, interpretation, and final report
+## Key Findings
 
-### Team Information
-**Student:** Mahliq Obie 
-**Course:** CS 4412 - Data Mining  
-**Institution:** Kennesaw State University  
-**Semester:** [Current Semester]
+### 4 User Archetypes (K-Means, k=4)
 
-### Repository Structure
+| Cluster | Label | Size | Characteristics |
+|---------|-------|------|----------------|
+| 0 | **Deep Technical Discussers** | 3.4% | Long posts, high scores, AI ethics/policy vocabulary |
+| 1 | **Moderate Engagers** | 17.0% | Mid-length, practical use cases, productivity focus |
+| 2 | **Niche Interest Group** | 5.9% | Domain-specific: education, creative writing, research |
+| 3 | **Mainstream Majority** | 73.6% | Short casual reactions, typical Reddit behavior |
+
+### 8 LDA Topics Discovered
+
+Topics include: AI Ethics & Regulation, Practical Use Cases, Education & Plagiarism, Future of AI, Technical Capabilities, Creative Applications, Product & Company News, and General Reactions.
+
+### Cross-Community Insight
+
+Subreddit culture significantly shapes discourse. r/MachineLearning concentrates Deep Discussers; r/ChatGPT is dominated by Mainstream comments. Comment scores are consistently higher for Cluster 0 regardless of subreddit, confirming that depth earns recognition even when it's rare.
+
+---
+
+## Methods
+
+```
+Reddit API (PRAW)
+      ↓
+Text Preprocessing (NLTK: tokenize, lemmatize, stopword removal)
+      ↓
+Feature Engineering (TF-IDF 5K features + behavioral features)
+      ↓
+Dimensionality Reduction (PCA, 50 components)
+      ↓
+K-Means Clustering (k=4, Elbow + Silhouette selection)
+      ↓
+LDA Topic Modeling (8 topics, Gensim, coherence c_v = 0.47)
+      ↓
+Cluster Profiling & Cross-Community Analysis
+```
+
+**Key parameters:** k=4, 5,000 TF-IDF features, 50 PCA components, 8 LDA topics, silhouette ≈ 0.31, LDA coherence (c_v) = 0.47.
+
+---
+
+## Repository Structure
+
 ```
 cs4412-project/
-├── README.md
+├── README.md                        ← You are here
+├── requirements.txt                 ← Python dependencies
+│
 ├── docs/
-│   └── CS4412_M1_Proposal.pdf
-├── data/
-│   └── .gitignore
+│   ├── CS4412_M1_Proposal.pdf      ← M1: Project proposal
+│   ├── M2_Summary.pdf              ← M2: Exploratory analysis summary
+│   └── CS4412_M4_Final_Report.pdf  ← M4: Final report (5-8 pages)
+│
 ├── notebooks/
-│   └── (Jupyter notebooks for analysis)
+│   ├── M2_Analysis.ipynb           ← Exploratory data analysis
+│   └── M3_M4_Analysis.ipynb        ← Clustering + topic modeling
+│
 ├── src/
-│   └── (Python scripts)
+│   ├── collect_data.py             ← Reddit API data collection
+│   ├── preprocess.py               ← Text cleaning pipeline
+│   ├── clustering.py               ← K-Means + evaluation
+│   └── topic_modeling.py           ← LDA implementation
+│
+├── data/
+│   └── .gitignore                  ← Dataset not tracked (see below)
+│
 └── results/
-    └── (Output visualizations and reports)
+    ├── cluster_profiles.csv        ← Cluster summary statistics
+    └── figures/                    ← Visualizations
 ```
 
-### Technologies and Libraries
-- **Python 3.x**
-- **scikit-learn:** Clustering, TF-IDF, PCA
-- **gensim:** Topic modeling (LDA)
-- **pandas:** Data manipulation
-- **matplotlib/seaborn:** Visualization
-- **nltk/spacy:** Text preprocessing
+---
 
-### Getting Started
+## Getting Started
+
+### Prerequisites
+
+- Python 3.9+
+- Reddit API credentials (free at reddit.com/prefs/apps)
+
+### Installation
+
 ```bash
-# Clone the repository
 git clone https://github.com/MahliqO/cs4412-project.git
 cd cs4412-project
 
-# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate      # Windows: venv\Scripts\activate
 
-# Install dependencies
 pip install -r requirements.txt
-
-# Download dataset
-# Follow instructions in data/README.md
 ```
 
-### Documentation
-Full project proposal and detailed methodology can be found in `/docs/CS4412_M1_Proposal.pdf`
+### Dataset Access
 
-### License
-This project is for academic purposes as part of CS 4412 coursework.
+The full dataset (49,428 comments) is not included in this repository due to Reddit API terms of service. To reproduce:
 
+```bash
+# Add your Reddit API credentials to a .env file:
+# CLIENT_ID=your_id
+# CLIENT_SECRET=your_secret
+# USER_AGENT=cs4412-project
 
-### Acknowledgments
-- Dataset provided by: [Armita84/ChatGPT-Dataset-Reddit](https://github.com/Armita84/ChatGPT-Dataset-Reddit)
-- LaTeX document preparation assisted by Claude (Anthropic AI)
-- Course instructor and teaching assistants
-- CS 4412 Data Mining course materials
+python src/collect_data.py
+```
+
+Alternatively, a 1,000-comment sample for testing is available in `data/sample_comments.csv`.
+
 ---
-*Last Updated: February 2026*
+
+## Requirements
+
+See `requirements.txt`. Key libraries:
+
+```
+praw>=7.7.0          # Reddit API
+pandas>=2.0.0        # Data manipulation
+scikit-learn>=1.3.0  # K-Means, TF-IDF, PCA
+gensim>=4.3.0        # LDA topic modeling
+nltk>=3.8.0          # Text preprocessing
+matplotlib>=3.7.0    # Visualization
+seaborn>=0.12.0      # Statistical plots
+jupyter>=1.0.0       # Notebooks
+```
+
+---
+
+## Critical Assessment
+
+**Validity:** Silhouette score of ~0.31 indicates real but moderate cluster separation. Cluster labels are interpretive and have face validity against known online participation patterns.
+
+**Limitations:** Reddit users are not representative of the general public (sampling bias, English-only). TF-IDF misses semantic meaning; future work should apply SBERT embeddings. Temporal snapshot only.
+
+**Ethics:** Data collected via public Reddit API. All author IDs anonymized. Analysis uses aggregate patterns only — no individual targeting possible or intended.
+
+---
+
+## Future Work
+
+- Apply SBERT sentence embeddings for semantic clustering
+- Longitudinal analysis to track how discourse shifts as AI evolves
+- Human annotation study to validate cluster labels
+- Expand to non-English subreddits
+- Apply BERTopic as an alternative to LDA
+
+---
+
+## Course Information
+
+| Field | Value |
+|-------|-------|
+| Course | CS 4412 — Data Mining |
+| Institution | Kennesaw State University |
+| Semester | Spring 2026 |
+| Student | Mahliq Obie |
+| Project | SP5-Blue-Grocery → Reddit ChatGPT Analysis |
+
+---
+
+*This project was completed as part of CS 4412 coursework. All findings are for academic purposes.*
